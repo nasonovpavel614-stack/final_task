@@ -43,7 +43,7 @@ func nextDateHandler(w http.ResponseWriter, r *http.Request) {
 		var err error
 		now, err = time.Parse(DateFormat, nowStr)
 		if err != nil {
-			fmt.Fprint(w, errInvalidDate.Error())
+			writeText(w, errInvalidDate.Error())
 			return
 		}
 	}
@@ -53,9 +53,15 @@ func nextDateHandler(w http.ResponseWriter, r *http.Request) {
 
 	next, err := NextDate(now, date, repeat)
 	if err != nil {
-		fmt.Fprint(w, err.Error())
+		writeText(w, err.Error())
 		return
 	}
 
-	fmt.Fprint(w, next)
+	writeText(w, next)
+}
+
+func writeText(w http.ResponseWriter, text string) {
+	if _, err := fmt.Fprint(w, text); err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }

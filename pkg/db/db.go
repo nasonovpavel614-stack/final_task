@@ -44,11 +44,13 @@ func Init(dbFile string) error {
 	}
 
 	if err = db.Ping(); err != nil {
+		_ = db.Close()
 		return err
 	}
 
 	if install {
 		if _, err = db.Exec(schema); err != nil {
+			_ = db.Close()
 			return err
 		}
 	}

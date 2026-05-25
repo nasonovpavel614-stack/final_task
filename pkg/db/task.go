@@ -12,8 +12,9 @@ import (
 var ErrTaskNotFound = errors.New("Задача не найдена")
 
 const (
+	DateFormat        = "20060102"
 	dateDisplayFormat = "02.01.2006"
-	tasksLimitDefault = 50
+	TasksLimitDefault = 50
 )
 
 // Task описывает задачу планировщика.
@@ -130,11 +131,11 @@ func UpdateDate(next, id string) error {
 // Если search не пустой — фильтрует по подстроке в title/comment или по дате (02.01.2006).
 func Tasks(limit int, search string) ([]*Task, error) {
 	if limit <= 0 {
-		limit = tasksLimitDefault
+		limit = TasksLimitDefault
 	}
 
 	if search == "" {
-		today := time.Now().Format("20060102")
+		today := time.Now().Format(DateFormat)
 		return queryTasks(
 			`SELECT id, date, title, comment, repeat FROM scheduler WHERE date >= ? ORDER BY date LIMIT ?`,
 			today, limit,
@@ -144,7 +145,7 @@ func Tasks(limit int, search string) ([]*Task, error) {
 	if t, err := time.Parse(dateDisplayFormat, search); err == nil {
 		return queryTasks(
 			`SELECT id, date, title, comment, repeat FROM scheduler WHERE date = ? ORDER BY date LIMIT ?`,
-			t.Format("20060102"), limit,
+			t.Format(DateFormat), limit,
 		)
 	}
 

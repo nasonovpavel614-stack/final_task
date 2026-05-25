@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"go_final_project/pkg/db"
 	"go_final_project/pkg/server"
@@ -14,6 +15,7 @@ func main() {
 	defer db.Close()
 
 	if err := server.Run("web"); err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		os.Exit(1)
 	}
 }

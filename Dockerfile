@@ -8,18 +8,15 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o server .
 
-FROM ubuntu:latest
+FROM alpine:latest
 
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
 COPY --from=builder /app/server .
 COPY --from=builder /app/web ./web
 
-EXPOSE 7540
-
-ENV TODO_PORT=7540
 ENV TODO_DBFILE=/app/scheduler.db
 
 CMD ["./server"]
