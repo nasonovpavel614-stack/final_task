@@ -14,7 +14,7 @@ var ErrTaskNotFound = errors.New("Задача не найдена")
 const (
 	DateFormat        = "20060102"
 	dateDisplayFormat = "02.01.2006"
-	TasksLimitDefault = 50
+	tasksLimitDefault = 50
 )
 
 // Task описывает задачу планировщика.
@@ -131,7 +131,7 @@ func UpdateDate(next, id string) error {
 // Если search не пустой — фильтрует по подстроке в title/comment или по дате (02.01.2006).
 func Tasks(limit int, search string) ([]*Task, error) {
 	if limit <= 0 {
-		limit = TasksLimitDefault
+		limit = tasksLimitDefault
 	}
 
 	if search == "" {

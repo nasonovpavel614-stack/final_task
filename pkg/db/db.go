@@ -40,17 +40,22 @@ func Init(dbFile string) error {
 	var err error
 	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
+		if db != nil {
+			_ = db.Close()
+		}
 		return err
 	}
 
 	if err = db.Ping(); err != nil {
 		_ = db.Close()
+		db = nil
 		return err
 	}
 
 	if install {
 		if _, err = db.Exec(schema); err != nil {
 			_ = db.Close()
+			db = nil
 			return err
 		}
 	}
